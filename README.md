@@ -1144,103 +1144,27 @@ print('There are',len(df['Location'].unique())," Unique of \'Location\':",df['Lo
 
 
 ```python
-df[['Rainfall','RainToday']]
+# we need to remove as we can't specifically tell if its gonna rain
+# it's just around 2% data so we can remove
+df['RainTomorrow'].isnull().sum()
 ```
 
 
 
 
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Rainfall</th>
-      <th>RainToday</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0.6</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1.0</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>145455</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>145456</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>145457</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>145458</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <th>145459</th>
-      <td>0.0</td>
-      <td>No</td>
-    </tr>
-  </tbody>
-</table>
-<p>145460 rows × 2 columns</p>
-</div>
+    3267
 
 
 
 
 ```python
-for index,row in df.iterrows():
-    if df['Rainfall'][index] > 0:
-        df['RainToday'][index] = 'Yes'
+print('Nulls : ',df['RainTomorrow'].isnull().sum())
+print('Length of new df :',df.shape)
 ```
+
+    Nulls :  3267
+    Length of new df : (145460, 23)
+    
 
 
 ```python
@@ -1334,18 +1258,16 @@ print(null_counts[null_counts > 0].sort_values(ascending=False))
     Series([], dtype: float64)
     
 
-## Heatmap for correlation
-
 
 ```python
-Labeler = LabelEncoder()
-df['RainToday'] = Labeler.fit_transform(df['RainToday'])
-df['RainTomorrow'] = Labeler.fit_transform(df['RainTomorrow'])
+for index,row in df.iterrows():
+    if df['Rainfall'][index] > 0:
+        df['RainToday'][index] = 'Yes'
 ```
 
 
 ```python
-df[['RainToday','RainTomorrow']]
+df[['Rainfall','RainToday']]
 ```
 
 
@@ -1369,35 +1291,35 @@ df[['RainToday','RainTomorrow']]
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>Rainfall</th>
       <th>RainToday</th>
-      <th>RainTomorrow</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>1</td>
-      <td>0</td>
+      <td>0.6</td>
+      <td>Yes</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>1</td>
-      <td>0</td>
+      <td>1.0</td>
+      <td>Yes</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1406,28 +1328,28 @@ df[['RainToday','RainTomorrow']]
     </tr>
     <tr>
       <th>145455</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>145456</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>145457</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>145458</th>
-      <td>0</td>
-      <td>0</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
     <tr>
       <th>145459</th>
-      <td>0</td>
-      <td>2</td>
+      <td>0.0</td>
+      <td>No</td>
     </tr>
   </tbody>
 </table>
@@ -1435,6 +1357,15 @@ df[['RainToday','RainTomorrow']]
 </div>
 
 
+
+## Heatmap for correlation
+
+
+```python
+Labeler = LabelEncoder()
+df['RainToday'] = Labeler.fit_transform(df['RainToday'])
+df['RainTomorrow'] = Labeler.fit_transform(df['RainTomorrow'])
+```
 
 
 ```python
@@ -1451,7 +1382,7 @@ plt.show()
 
 
     
-![png](output_36_0.png)
+![png](output_37_0.png)
     
 
 
